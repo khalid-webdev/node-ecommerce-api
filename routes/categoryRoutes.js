@@ -37,13 +37,13 @@ router.post("/", upload.single('icon'), async (req, res) => {
     return res.status(400).json({ message: "Name and icon are missing!!" });
   }
   const category = await Category.findOne({ name: req.body.name });
-  if(category)return res.status(400).json({message:"Name is Already exist!!"})
+  if (category) return res.status(400).json({ message: "Name is Already exist!!" })
   const newCategory = new Category({
     name: req.body.name,
     image: req.file.filename
   });
   await newCategory.save()
   res.status(201).json(newCategory)
-})
+});
 
 module.exports = router;
