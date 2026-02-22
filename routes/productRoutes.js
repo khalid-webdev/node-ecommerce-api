@@ -33,11 +33,11 @@ const upload = multer({
     fileSize: 2 * 1024 * 1024
   }
 });
-router.post("/",authMiddleware,checkRole("seller"),upload.array("images"), async (req, res) => {
+router.post("/", authMiddleware, checkRole("seller"), upload.array("images", 8), async (req, res) => {
   const { title, description, category, price, stock } = req.body;
   const images = req.files.map((image) => image.filename);
   console.log(req.user);
-  if(images.length === 0){
+  if (images.length === 0) {
     return res.status(400).json({ message: "Images feild can not be empty!" });
   }
   const newProduct = new Product({
@@ -49,8 +49,9 @@ router.post("/",authMiddleware,checkRole("seller"),upload.array("images"), async
     stock,
     images
   });
-  res.send(newProduct);
-})
+  await newProduct.save();
+  res.status(201).json(newProduct);
+});
 
 
 
