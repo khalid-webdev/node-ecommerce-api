@@ -27,11 +27,14 @@ router.post("/:productId",authMiddleware,async(req,res)=>{
       totalCartPrice:0
     })
   }
-  console.log(cart);
+
     const indexOfProduct=cart.products.findIndex((product) => product.productId.toString() === productId.toString());
+
   console.log(indexOfProduct);
   if (indexOfProduct !== -1) {
-    
+    if (cart.products[indexOfProduct].quantity + quantity >= product.stock) {
+      return res.status(400).json({ message: "Out of stock!" })
+    }
     cart.products[indexOfProduct].quantity += quantity;
   } else {
     cart.products.push({
